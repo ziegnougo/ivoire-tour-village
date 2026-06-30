@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { villages } from "@/lib/data";
-import { VillageCard } from "@/components/village-card";
+import { VillagesExplorer } from "@/components/villages-explorer";
+import { VillageMap } from "@/components/map/village-map";
 
 export const metadata: Metadata = {
   title: "Villages touristiques | Ivoire-Tour Village",
@@ -18,10 +19,13 @@ export default function VillagesPage() {
         Chaque village dispose d&apos;une fiche complète : histoire,
         patrimoine, activités, hébergements et artisanat local.
       </p>
-      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {villages.map((village) => (
-          <VillageCard key={village.slug} village={village} />
-        ))}
+
+      <div className="mt-8">
+        <VillageMap villages={villages} center={[7.54, -5.55]} zoom={6} />
+      </div>
+
+      <div className="mt-10">
+        <VillagesExplorer villages={villages} />
       </div>
     </div>
   );

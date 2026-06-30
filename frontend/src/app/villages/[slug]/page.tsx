@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { villages, getVillageBySlug, getOffresByVillage } from "@/lib/data";
 import { OffreCard } from "@/components/offre-card";
 import { Badge } from "@/components/ui/badge";
+import { VillageMap } from "@/components/map/village-map";
 
 export function generateStaticParams() {
   return villages.map((village) => ({ slug: village.slug }));
@@ -89,6 +90,12 @@ export default async function VillagePage({
         </div>
 
         <aside className="space-y-6">
+          <VillageMap
+            villages={[village]}
+            center={[village.coordonnees.lat, village.coordonnees.lng]}
+            zoom={11}
+            height={260}
+          />
           <div className="rounded-xl border p-5">
             <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
               Coordonnées GPS

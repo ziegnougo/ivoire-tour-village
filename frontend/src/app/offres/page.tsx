@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { offres } from "@/lib/data";
-import { OffreCard } from "@/components/offre-card";
+import { OffresExplorer } from "@/components/offres-explorer";
 
 export const metadata: Metadata = {
   title: "Offres & expériences | Ivoire-Tour Village",
@@ -18,10 +18,8 @@ export default function OffresPage() {
         Des excursions, randonnées et séjours de camping à réserver en ligne
         dans les villages partenaires.
       </p>
-      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {offres.map((offre) => (
-          <OffreCard key={offre.slug} offre={offre} />
-        ))}
+      <div className="mt-8">
+        <OffresExplorer offres={offres} />
       </div>
     </div>
   );

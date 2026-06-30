@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { FavoriteButton } from "@/components/favorite-button";
 import { getVillageBySlug, type Offre } from "@/lib/data";
 
 const formatPrix = (prix: number) =>
@@ -23,6 +24,7 @@ export function OffreCard({ offre }: { offre: Offre }) {
         <Badge className="absolute left-3 top-3 bg-white/90 text-foreground hover:bg-white/90">
           {offre.difficulte}
         </Badge>
+        <FavoriteButton slug={offre.slug} />
       </div>
       <div className="p-5">
         {village && (

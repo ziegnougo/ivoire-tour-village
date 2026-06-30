@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { offres, getOffreBySlug, getVillageBySlug } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { FavoriteButton } from "@/components/favorite-button";
 
 export function generateStaticParams() {
   return offres.map((offre) => ({ slug: offre.slug }));
@@ -80,15 +81,19 @@ export default async function OffrePage({
           </div>
 
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-            <button className="flex-1 rounded-full bg-emerald-700 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-emerald-800">
+            <Link
+              href={`/offres/${offre.slug}/reserver`}
+              className="flex-1 rounded-full bg-emerald-700 px-6 py-3 text-center text-sm font-medium text-white transition-colors hover:bg-emerald-800"
+            >
               Réserver
-            </button>
-            <button className="flex-1 rounded-full border px-6 py-3 text-sm font-medium transition-colors hover:bg-muted">
+            </Link>
+            <Link
+              href={`/offres/${offre.slug}/devis`}
+              className="flex-1 rounded-full border px-6 py-3 text-center text-sm font-medium transition-colors hover:bg-muted"
+            >
               Demander un devis
-            </button>
-            <button className="rounded-full border px-6 py-3 text-sm font-medium transition-colors hover:bg-muted">
-              ♡ Favoris
-            </button>
+            </Link>
+            <FavoriteButton slug={offre.slug} variant="full" />
           </div>
         </div>
       </div>
