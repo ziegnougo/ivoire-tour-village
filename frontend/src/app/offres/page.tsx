@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { offres } from "@/lib/data";
+import { getOffres, getVillages } from "@/lib/api";
 import { OffresExplorer } from "@/components/offres-explorer";
 
 export const metadata: Metadata = {
@@ -8,7 +8,9 @@ export const metadata: Metadata = {
     "Réservez des expériences de camping et d'immersion dans les villages touristiques de Côte d'Ivoire.",
 };
 
-export default function OffresPage() {
+export default async function OffresPage() {
+  const [offres, villages] = await Promise.all([getOffres(), getVillages()]);
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-16">
       <h1 className="text-3xl font-bold sm:text-4xl">
@@ -19,7 +21,7 @@ export default function OffresPage() {
         dans les villages partenaires.
       </p>
       <div className="mt-8">
-        <OffresExplorer offres={offres} />
+        <OffresExplorer offres={offres} villages={villages} />
       </div>
     </div>
   );

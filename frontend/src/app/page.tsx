@@ -1,10 +1,12 @@
 import Link from "next/link";
-import { villages, offres } from "@/lib/data";
+import { getVillages, getOffres } from "@/lib/api";
 import { VillageCard } from "@/components/village-card";
 import { OffreCard } from "@/components/offre-card";
 import { FadeIn } from "@/components/fade-in";
 
-export default function Home() {
+export default async function Home() {
+  const [villages, offres] = await Promise.all([getVillages(), getOffres()]);
+
   return (
     <div>
       <section className="relative overflow-hidden bg-gradient-to-b from-emerald-50 to-white">

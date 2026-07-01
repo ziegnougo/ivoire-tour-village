@@ -1,14 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { villages, getVillageBySlug, getOffresByVillage } from "@/lib/data";
+import { getVillage } from "@/lib/api";
 import { OffreCard } from "@/components/offre-card";
 import { Badge } from "@/components/ui/badge";
 import { VillageMap } from "@/components/map/village-map";
-
-export function generateStaticParams() {
-  return villages.map((village) => ({ slug: village.slug }));
-}
 
 export async function generateMetadata({
   params,
@@ -16,11 +12,11 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const village = getVillageBySlug(slug);
-  if (!village) return {};
+  const result = await getVillage(slug);
+  if (!result) return {};
   return {
-    title: `${village.nom} | Ivoire-Tour Village`,
-    description: village.resume,
+    title: `${result.village.nom} | Ivoire-Tour Village`,
+    description: result.village.resume,
   };
 }
 
@@ -46,10 +42,10 @@ export default async function VillagePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const village = getVillageBySlug(slug);
-  if (!village) notFound();
+  const result = await getVillage(slug);
+  if (!result) notFound();
 
-  const offresDuVillage = getOffresByVillage(village.slug);
+  const { village, offres: offresDuVillage } = result;
 
   return (
     <div>

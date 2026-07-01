@@ -2,12 +2,18 @@
 
 import { useMemo, useState } from "react";
 import { OffreCard } from "@/components/offre-card";
-import { villages, type Offre } from "@/lib/data";
+import type { Offre, Village } from "@/lib/api";
 
 const DIFFICULTES = ["Toutes", "Facile", "Modéré", "Difficile"] as const;
 const PRIX_MAX_DEFAUT = 100000;
 
-export function OffresExplorer({ offres }: { offres: Offre[] }) {
+export function OffresExplorer({
+  offres,
+  villages,
+}: {
+  offres: Offre[];
+  villages: Village[];
+}) {
   const [search, setSearch] = useState("");
   const [villageSlug, setVillageSlug] = useState("Tous");
   const [difficulte, setDifficulte] =

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import type { Village } from "@/lib/data";
+import type { Village } from "@/lib/api";
 
 export function VillageCard({ village }: { village: Village }) {
   return (

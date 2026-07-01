@@ -1,14 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { offres, getOffreBySlug, getVillageBySlug } from "@/lib/data";
+import { getOffre } from "@/lib/api";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { FavoriteButton } from "@/components/favorite-button";
-
-export function generateStaticParams() {
-  return offres.map((offre) => ({ slug: offre.slug }));
-}
 
 export async function generateMetadata({
   params,
@@ -16,7 +12,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const offre = getOffreBySlug(slug);
+  const offre = await getOffre(slug);
   if (!offre) return {};
   return {
     title: `${offre.titre} | Ivoire-Tour Village`,
@@ -33,10 +29,8 @@ export default async function OffrePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const offre = getOffreBySlug(slug);
+  const offre = await getOffre(slug);
   if (!offre) notFound();
-
-  const village = getVillageBySlug(offre.villageSlug);
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12">
@@ -51,12 +45,12 @@ export default async function OffrePage({
         </div>
 
         <div>
-          {village && (
+          {offre.villageNom && (
             <Link
-              href={`/villages/${village.slug}`}
+              href={`/villages/${offre.villageSlug}`}
               className="text-sm font-medium uppercase tracking-wide text-emerald-700 hover:underline"
             >
-              {village.nom}
+              {offre.villageNom}
             </Link>
           )}
           <h1 className="mt-2 text-3xl font-bold sm:text-4xl">

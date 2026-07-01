@@ -2,19 +2,10 @@
 
 import { useMemo, useState, type FormEvent } from "react";
 import Link from "next/link";
-import type { Offre } from "@/lib/data";
+import { ApiError, createReservation, type Offre } from "@/lib/api";
 
 const formatPrix = (prix: number) =>
   new Intl.NumberFormat("fr-FR").format(prix) + " FCFA";
-
-function generateReference() {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let ref = "ITV-";
-  for (let i = 0; i < 6; i++) {
-    ref += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return ref;
-}
 
 export function ReservationForm({ offre }: { offre: Offre }) {
   const [personnes, setPersonnes] = useState(1);
@@ -25,6 +16,7 @@ export function ReservationForm({ offre }: { offre: Offre }) {
     personnes: number;
   } | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const total = personnes * offre.prix;
 
@@ -34,15 +26,31 @@ export function ReservationForm({ offre }: { offre: Offre }) {
     return today.toISOString().slice(0, 10);
   }, []);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setError(null);
     setSubmitting(true);
-    // Simulation : la confirmation et le paiement réels seront branchés
-    // sur l'API de réservation (CinetPay) une fois le backend en place.
-    window.setTimeout(() => {
+
+    const formData = new FormData(e.currentTarget);
+
+    try {
+      const reservation = await createReservation({
+        offre_slug: offre.slug,
+        nom: String(formData.get("nom")),
+        email: String(formData.get("email")),
+        date_experience: date,
+        nombre_personnes: personnes,
+      });
+      setConfirmation({ reference: reservation.reference, date, personnes });
+    } catch (err) {
+      setError(
+        err instanceof ApiError
+          ? err.message
+          : "Une erreur est survenue, veuillez réessayer."
+      );
+    } finally {
       setSubmitting(false);
-      setConfirmation({ reference: generateReference(), date, personnes });
-    }, 600);
+    }
   }
 
   if (confirmation) {
@@ -126,6 +134,7 @@ export function ReservationForm({ offre }: { offre: Offre }) {
           </label>
           <input
             id="nom"
+            name="nom"
             required
             className="mt-1.5 w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-700/30"
           />
@@ -136,6 +145,7 @@ export function ReservationForm({ offre }: { offre: Offre }) {
           </label>
           <input
             id="email"
+            name="email"
             type="email"
             required
             className="mt-1.5 w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-700/30"
@@ -166,6 +176,12 @@ export function ReservationForm({ offre }: { offre: Offre }) {
           <span>{formatPrix(total)}</span>
         </div>
       </div>
+
+      {error && (
+        <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+          {error}
+        </p>
+      )}
 
       <button
         type="submit"

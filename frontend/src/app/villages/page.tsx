@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { villages } from "@/lib/data";
+import { getVillages } from "@/lib/api";
 import { VillagesExplorer } from "@/components/villages-explorer";
 import { VillageMap } from "@/components/map/village-map";
 
@@ -9,7 +9,9 @@ export const metadata: Metadata = {
     "Parcourez les fiches complètes des villages touristiques de Côte d'Ivoire : histoire, patrimoine, activités et hébergements.",
 };
 
-export default function VillagesPage() {
+export default async function VillagesPage() {
+  const villages = await getVillages();
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-16">
       <h1 className="text-3xl font-bold sm:text-4xl">

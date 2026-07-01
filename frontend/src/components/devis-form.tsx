@@ -2,20 +2,43 @@
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
-import type { Offre } from "@/lib/data";
+import { ApiError, createDevisRequest, type Offre } from "@/lib/api";
 
 export function DevisForm({ offre }: { offre: Offre }) {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setError(null);
     setSubmitting(true);
-    // Simulation : aucun backend n'est encore branché sur ce formulaire.
-    window.setTimeout(() => {
-      setSubmitting(false);
+
+    const formData = new FormData(e.currentTarget);
+    const personnes = formData.get("personnes");
+    const dateSouhaitee = String(formData.get("date-souhaitee") ?? "");
+    const message = String(formData.get("message") ?? "");
+
+    try {
+      await createDevisRequest({
+        offre_slug: offre.slug,
+        nom: String(formData.get("nom")),
+        email: String(formData.get("email")),
+        telephone: String(formData.get("telephone")),
+        nombre_personnes: personnes ? Number(personnes) : undefined,
+        date_souhaitee: dateSouhaitee || undefined,
+        message: message || undefined,
+      });
       setSubmitted(true);
-    }, 600);
+    } catch (err) {
+      setError(
+        err instanceof ApiError
+          ? err.message
+          : "Une erreur est survenue, veuillez réessayer."
+      );
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   if (submitted) {
@@ -47,6 +70,7 @@ export function DevisForm({ offre }: { offre: Offre }) {
           </label>
           <input
             id="nom"
+            name="nom"
             required
             className="mt-1.5 w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-700/30"
           />
@@ -57,6 +81,7 @@ export function DevisForm({ offre }: { offre: Offre }) {
           </label>
           <input
             id="telephone"
+            name="telephone"
             type="tel"
             required
             className="mt-1.5 w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-700/30"
@@ -70,6 +95,7 @@ export function DevisForm({ offre }: { offre: Offre }) {
         </label>
         <input
           id="email"
+          name="email"
           type="email"
           required
           className="mt-1.5 w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-700/30"
@@ -83,6 +109,7 @@ export function DevisForm({ offre }: { offre: Offre }) {
           </label>
           <input
             id="personnes"
+            name="personnes"
             type="number"
             min={1}
             max={offre.placesDisponibles}
@@ -97,6 +124,7 @@ export function DevisForm({ offre }: { offre: Offre }) {
           </label>
           <input
             id="date-souhaitee"
+            name="date-souhaitee"
             type="date"
             className="mt-1.5 w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-700/30"
           />
@@ -109,11 +137,18 @@ export function DevisForm({ offre }: { offre: Offre }) {
         </label>
         <textarea
           id="message"
+          name="message"
           rows={4}
           placeholder="Précisez vos besoins ou contraintes particulières..."
           className="mt-1.5 w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-700/30"
         />
       </div>
+
+      {error && (
+        <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+          {error}
+        </p>
+      )}
 
       <button
         type="submit"

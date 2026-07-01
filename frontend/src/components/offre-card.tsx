@@ -1,14 +1,12 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { FavoriteButton } from "@/components/favorite-button";
-import { getVillageBySlug, type Offre } from "@/lib/data";
+import type { Offre } from "@/lib/api";
 
 const formatPrix = (prix: number) =>
   new Intl.NumberFormat("fr-FR").format(prix) + " FCFA";
 
 export function OffreCard({ offre }: { offre: Offre }) {
-  const village = getVillageBySlug(offre.villageSlug);
-
   return (
     <Link
       href={`/offres/${offre.slug}`}
@@ -27,9 +25,9 @@ export function OffreCard({ offre }: { offre: Offre }) {
         <FavoriteButton slug={offre.slug} />
       </div>
       <div className="p-5">
-        {village && (
+        {offre.villageNom && (
           <p className="text-xs font-medium uppercase tracking-wide text-emerald-700">
-            {village.nom}
+            {offre.villageNom}
           </p>
         )}
         <h3 className="mt-1 text-lg font-semibold">{offre.titre}</h3>
