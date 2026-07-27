@@ -1,0 +1,35 @@
+name: Cross-Repo Version Sync
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  version-sync:
+    name: Ensure API / Release Versions Align
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+      - name: Extract versions from manifests
+        id: versions
+        run: |
+          BACKEND_VERSION=$(jq -r '.version // "0.0.0"' backend/composer.json)
+          FRONTEND_VERSION=$(jq -r '.version // "0.0.0"' frontend/package.json)
+          echo "backend=${BACKEND_VERSION}" >> "$GITHUB_OUTPUT"
+          echo "frontend=${FRONTEND_VERSION}" >> "$GITHUB_OUTPUT"
+      - name: Compare versions
+        run: |
+          BACK="$(echo '${{ steps.versions.outputs.backend }}')"
+          FRT="$(echo '${{ steps.versions.outputs.frontend }}')"
+          if [ "$BACK" != "$FRT" ]; then
+            echo "Version mismatch detected: backend=$BACK, frontend=$FRT"
+            echo "::warning::Please align composer.json and package.json versions before releasing."
+            exit 1
+          fi
+          echo "Versions aligned: $BACK"
