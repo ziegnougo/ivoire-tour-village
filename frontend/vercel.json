@@ -7,11 +7,5 @@
   "env": {
     "NEXT_PUBLIC_SUPABASE_URL": "https://TU_PROJET.supabase.co",
     "NEXT_PUBLIC_SUPABASE_ANON_KEY": "TON_ANON_KEY"
-  },
-  "rewrites": [
-    {
-      "source": "/api/:path*",
-      "destination": "https://api.ivoiretourvillage.org/api/:path*"
-    }
-  ]
+  }
 }
