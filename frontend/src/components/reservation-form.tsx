@@ -3,6 +3,7 @@
 import { useMemo, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { createReservationUnified } from "@/lib/data";
+import type { Offre } from "@/lib/api";
 
 const formatPrix = (prix: number) =>
   new Intl.NumberFormat("fr-FR").format(prix) + " FCFA";

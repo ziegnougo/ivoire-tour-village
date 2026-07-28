@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { createDevisRequestUnified } from "@/lib/data";
+import type { Offre } from "@/lib/api";
 
 export function DevisForm({ offre }: { offre: Offre }) {
   const [submitted, setSubmitted] = useState(false);
