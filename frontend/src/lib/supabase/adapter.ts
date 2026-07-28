@@ -35,14 +35,21 @@ function mapSupabaseOffre(row: any, villageSlug = "", villageNom = ""): ApiOffre
   };
 }
 
+function requireSupabase() {
+  if (!supabase) throw new Error("Supabase is not configured");
+  return supabase;
+}
+
 export async function getVillages(): Promise<ApiVillage[]> {
-  const { data, error } = await supabase.from("villages").select("*").order("nom", { ascending: true });
+  const sb = requireSupabase();
+  const { data, error } = await sb.from("villages").select("*").order("nom", { ascending: true });
   if (error) throw error;
   return (data ?? []).map(mapSupabaseVillage);
 }
 
 export async function getVillage(slug: string): Promise<{ village: ApiVillage; offres: ApiOffre[] } | null> {
-  const { data, error } = await supabase.from("villages").select("*, offres(*)").eq("slug", slug).single();
+  const sb = requireSupabase();
+  const { data, error } = await sb.from("villages").select("*, offres(*)").eq("slug", slug).single();
   if (error || !data) return null;
 
   const village = mapSupabaseVillage(data);
@@ -51,23 +58,26 @@ export async function getVillage(slug: string): Promise<{ village: ApiVillage; o
 }
 
 export async function getOffres(): Promise<ApiOffre[]> {
-  const { data, error } = await supabase.from("offres").select("*, village:villages(*)").order("titre", { ascending: true });
+  const sb = requireSupabase();
+  const { data, error } = await sb.from("offres").select("*, village:villages(*)").order("titre", { ascending: true });
   if (error) throw error;
   return (data ?? []).map((o: any) => mapSupabaseOffre(o));
 }
 
 export async function getOffre(slug: string): Promise<ApiOffre | null> {
-  const { data, error } = await supabase.from("offres").select("*, village:villages(*)").eq("slug", slug).single();
+  const sb = requireSupabase();
+  const { data, error } = await sb.from("offres").select("*, village:villages(*)").eq("slug", slug).single();
   if (error || !data) return null;
   return mapSupabaseOffre(data, data.village?.slug, data.village?.nom);
 }
 
 export async function createReservation(payload: { offre_slug: string; nom: string; email: string; date_experience: string; nombre_personnes: number }) {
-  const { data: offre, error: offreError } = await supabase.from("offres").select("id, prix").eq("slug", payload.offre_slug).single();
+  const sb = requireSupabase();
+  const { data: offre, error: offreError } = await sb.from("offres").select("id, prix").eq("slug", payload.offre_slug).single();
   if (offreError || !offre) throw new Error("Offre introuvable");
 
   const prix_total = Number(offre.prix) * payload.nombre_personnes;
-  const { data, error } = await supabase.from("reservations").insert({
+  const { data, error } = await sb.from("reservations").insert({
     offre_id: offre.id,
     nom: payload.nom,
     email: payload.email,
@@ -82,10 +92,11 @@ export async function createReservation(payload: { offre_slug: string; nom: stri
 }
 
 export async function createDevisRequest(payload: { offre_slug: string; nom: string; email: string; telephone: string; nombre_personnes?: number; date_souhaitee?: string; message?: string }) {
-  const { data: offre, error: offreError } = await supabase.from("offres").select("id").eq("slug", payload.offre_slug).single();
+  const sb = requireSupabase();
+  const { data: offre, error: offreError } = await sb.from("offres").select("id").eq("slug", payload.offre_slug).single();
   if (offreError || !offre) throw new Error("Offre introuvable");
 
-  const { data, error } = await supabase.from("devis_requests").insert({
+  const { data, error } = await sb.from("devis_requests").insert({
     offre_id: offre.id,
     nom: payload.nom,
     email: payload.email,
@@ -101,7 +112,8 @@ export async function createDevisRequest(payload: { offre_slug: string; nom: str
 }
 
 export async function createContactMessage(payload: { nom: string; email: string; sujet: string; message: string }) {
-  const { data, error } = await supabase.from("contact_messages").insert({
+  const sb = requireSupabase();
+  const { data, error } = await sb.from("contact_messages").insert({
     nom: payload.nom,
     email: payload.email,
     sujet: payload.sujet,
