@@ -23,12 +23,8 @@ export function ContactForm() {
         message: String(formData.get("message")),
       });
       setSubmitted(true);
-    } catch (err) {
-      setError(
-        err instanceof ApiError
-          ? err.message
-          : "Une erreur est survenue, veuillez réessayer."
-      );
+    } catch {
+      setError("Une erreur est survenue, veuillez réessayer.");
     } finally {
       setSubmitting(false);
     }

@@ -30,12 +30,8 @@ export function DevisForm({ offre }: { offre: Offre }) {
         message: message || undefined,
       });
       setSubmitted(true);
-    } catch (err) {
-      setError(
-        err instanceof ApiError
-          ? err.message
-          : "Une erreur est survenue, veuillez réessayer."
-      );
+    } catch {
+      setError("Une erreur est survenue, veuillez réessayer.");
     } finally {
       setSubmitting(false);
     }

@@ -42,12 +42,8 @@ export function ReservationForm({ offre }: { offre: Offre }) {
         nombre_personnes: personnes,
       });
       setConfirmation({ reference: (reservation as any).reference, date, personnes });
-    } catch (err) {
-      setError(
-        err instanceof ApiError
-          ? err.message
-          : "Une erreur est survenue, veuillez réessayer."
-      );
+    } catch {
+      setError("Une erreur est survenue, veuillez réessayer.");
     } finally {
       setSubmitting(false);
     }
