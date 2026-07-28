@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
-import { ApiError, createDevisRequest, type Offre } from "@/lib/api";
+import { createDevisRequestUnified } from "@/lib/data";
 
 export function DevisForm({ offre }: { offre: Offre }) {
   const [submitted, setSubmitted] = useState(false);
@@ -20,7 +20,7 @@ export function DevisForm({ offre }: { offre: Offre }) {
     const message = String(formData.get("message") ?? "");
 
     try {
-      await createDevisRequest({
+      await createDevisRequestUnified({
         offre_slug: offre.slug,
         nom: String(formData.get("nom")),
         email: String(formData.get("email")),

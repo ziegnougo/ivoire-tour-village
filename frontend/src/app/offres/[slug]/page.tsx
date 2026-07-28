@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getOffre } from "@/lib/api";
+import { getOffreUnified } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { FavoriteButton } from "@/components/favorite-button";
@@ -12,7 +12,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const offre = await getOffre(slug);
+  const offre = await getOffreUnified(slug);
   if (!offre) return {};
   return {
     title: `${offre.titre} | Ivoire-Tour Village`,
@@ -29,7 +29,7 @@ export default async function OffrePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const offre = await getOffre(slug);
+  const offre = await getOffreUnified(slug);
   if (!offre) notFound();
 
   return (

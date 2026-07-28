@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getOffres, getVillages } from "@/lib/api";
+import { getOffresUnified, getVillagesUnified } from "@/lib/data";
 import { OffresExplorer } from "@/components/offres-explorer";
 
 export const metadata: Metadata = {
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default async function OffresPage() {
-  const [offres, villages] = await Promise.all([getOffres(), getVillages()]);
+  const [offres, villages] = await Promise.all([getOffresUnified(), getVillagesUnified()]);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-16">

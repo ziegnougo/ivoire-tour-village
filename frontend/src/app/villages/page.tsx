@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getVillages } from "@/lib/api";
+import { getVillagesUnified } from "@/lib/data";
 import { VillagesExplorer } from "@/components/villages-explorer";
 import { VillageMap } from "@/components/map/village-map";
 
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function VillagesPage() {
-  const villages = await getVillages();
+  const villages = await getVillagesUnified();
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-16">

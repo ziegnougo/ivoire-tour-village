@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getVillage } from "@/lib/api";
+import { getVillageUnified } from "@/lib/data";
 import { OffreCard } from "@/components/offre-card";
 import { Badge } from "@/components/ui/badge";
 import { VillageMap } from "@/components/map/village-map";
@@ -12,7 +12,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const result = await getVillage(slug);
+  const result = await getVillageUnified(slug);
   if (!result) return {};
   return {
     title: `${result.village.nom} | Ivoire-Tour Village`,
@@ -42,7 +42,7 @@ export default async function VillagePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const result = await getVillage(slug);
+  const result = await getVillageUnified(slug);
   if (!result) notFound();
 
   const { village, offres: offresDuVillage } = result;
