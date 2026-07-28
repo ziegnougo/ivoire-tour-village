@@ -321,3 +321,33 @@ export interface Database {
     };
   };
 }
+
+export type Village = {
+  slug: string;
+  nom: string;
+  region: string | null;
+  resume: string | null;
+  histoire: string | null;
+  patrimoine: string | null;
+  activites: string[];
+  hebergements: string[];
+  artisans: string[];
+  evenements: string[];
+  coordonnees: { lat: number; lng: number };
+  image: string;
+};
+
+export type Offre = {
+  slug: string;
+  titre: string;
+  villageSlug: string;
+  villageNom: string | null;
+  description: string | null;
+  duree: string | null;
+  prix: number;
+  placesDisponibles: number;
+  difficulte: "Facile" | "Modéré" | "Difficile";
+  inclus: string[];
+  nonInclus: string[];
+  image: string;
+};

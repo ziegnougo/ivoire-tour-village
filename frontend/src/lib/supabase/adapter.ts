@@ -9,10 +9,10 @@ function mapSupabaseVillage(row: any): Village {
     resume: row.resume ?? "",
     histoire: row.histoire ?? "",
     patrimoine: row.patrimoine ?? "",
-    activites: Array.isArray(row.activites) ? row.activites : [],
-    hebergements: Array.isArray(row.hebergements) ? row.hebergements : [],
-    artisans: Array.isArray(row.artisans) ? row.artisans : [],
-    evenements: Array.isArray(row.evenements) ? row.evenements : [],
+    activites: (Array.isArray(row.activites) ? row.activites : []).map(String),
+    hebergements: (Array.isArray(row.hebergements) ? row.hebergements : []).map(String),
+    artisans: (Array.isArray(row.artisans) ? row.artisans : []).map(String),
+    evenements: (Array.isArray(row.evenements) ? row.evenements : []).map(String),
     coordonnees: { lat: Number(row.latitude), lng: Number(row.longitude) },
     image: row.image ?? "",
   };
@@ -29,8 +29,8 @@ function mapSupabaseOffre(row: any, villageSlug = "", villageNom = ""): Offre {
     prix: Number(row.prix) || 0,
     placesDisponibles: Number(row.places_disponibles) || 0,
     difficulte: (row.difficulte as Offre["difficulte"]) ?? "Modéré",
-    inclus: Array.isArray(row.inclus) ? row.inclus : [],
-    nonInclus: Array.isArray(row.non_inclus) ? row.non_inclus : [],
+    inclus: (Array.isArray(row.inclus) ? row.inclus : []).map(String),
+    nonInclus: (Array.isArray(row.non_inclus) ? row.non_inclus : []).map(String),
     image: row.image ?? "",
   };
 }
