@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { getVillagesUnified, getOffresUnified } from "@/lib/data";
+import { getVillages, getOffres } from "@/lib/data";
 import { VillageCard } from "@/components/village-card";
 import { OffreCard } from "@/components/offre-card";
 import { FadeIn } from "@/components/fade-in";
 
 export default async function Home() {
-  const [villages, offres] = await Promise.all([getVillagesUnified(), getOffresUnified()]);
+  const [villages, offres] = await Promise.all([getVillages(), getOffres()]);
 
   return (
     <div>

@@ -2,8 +2,8 @@
 
 import { useMemo, useState, type FormEvent } from "react";
 import Link from "next/link";
-import { createReservationUnified } from "@/lib/data";
-import type { Offre } from "@/lib/api";
+import { createReservation } from "@/lib/data";
+import type { Offre } from "@/lib/supabase/types";
 
 const formatPrix = (prix: number) =>
   new Intl.NumberFormat("fr-FR").format(prix) + " FCFA";
@@ -35,7 +35,7 @@ export function ReservationForm({ offre }: { offre: Offre }) {
     const formData = new FormData(e.currentTarget);
 
     try {
-      const reservation = await createReservationUnified({
+      const reservation = await createReservation({
         offre_slug: offre.slug,
         nom: String(formData.get("nom")),
         email: String(formData.get("email")),

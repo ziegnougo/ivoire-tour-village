@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { createContactMessageUnified } from "@/lib/data";
+import { createContactMessage } from "@/lib/data";
 
 export function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
@@ -16,7 +16,7 @@ export function ContactForm() {
     const formData = new FormData(e.currentTarget);
 
     try {
-      await createContactMessageUnified({
+      await createContactMessage({
         nom: String(formData.get("nom")),
         email: String(formData.get("email")),
         sujet: String(formData.get("sujet")),

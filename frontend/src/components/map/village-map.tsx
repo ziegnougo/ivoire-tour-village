@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import type { Village } from "@/lib/api";
+import type { Village } from "@/lib/supabase/types";
 
 const LeafletMap = dynamic(
   () => import("./leaflet-map").then((mod) => mod.LeafletMap),

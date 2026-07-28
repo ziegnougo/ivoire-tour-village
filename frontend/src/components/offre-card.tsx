@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { FavoriteButton } from "@/components/favorite-button";
-import type { Offre } from "@/lib/api";
+import type { Offre } from "@/lib/supabase/types";
 
 const formatPrix = (prix: number) =>
   new Intl.NumberFormat("fr-FR").format(prix) + " FCFA";

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getOffreUnified } from "@/lib/data";
+import { getOffre } from "@/lib/data";
 import { ReservationForm } from "@/components/reservation-form";
 
 export async function generateMetadata({
@@ -10,7 +10,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const offre = await getOffreUnified(slug);
+  const offre = await getOffre(slug);
   if (!offre) return {};
   return { title: `Réserver — ${offre.titre} | Ivoire-Tour Village` };
 }
@@ -21,7 +21,7 @@ export default async function ReserverPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const offre = await getOffreUnified(slug);
+  const offre = await getOffre(slug);
   if (!offre) notFound();
 
   return (

@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { VillageCard } from "@/components/village-card";
-import type { Village } from "@/lib/api";
+import type { Village } from "@/lib/supabase/types";
 
 export function VillagesExplorer({ villages }: { villages: Village[] }) {
   const [search, setSearch] = useState("");

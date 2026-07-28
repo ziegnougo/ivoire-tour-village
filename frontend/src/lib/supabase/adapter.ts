@@ -1,7 +1,7 @@
 import { supabase } from "./client";
-import type { Village as ApiVillage, Offre as ApiOffre } from "@/lib/api";
+import type { Village, Offre } from "./types";
 
-function mapSupabaseVillage(row: any): ApiVillage {
+function mapSupabaseVillage(row: any): Village {
   return {
     slug: row.slug,
     nom: row.nom,
@@ -18,7 +18,7 @@ function mapSupabaseVillage(row: any): ApiVillage {
   };
 }
 
-function mapSupabaseOffre(row: any, villageSlug = "", villageNom = ""): ApiOffre {
+function mapSupabaseOffre(row: any, villageSlug = "", villageNom = ""): Offre {
   return {
     slug: row.slug,
     titre: row.titre,
@@ -28,7 +28,7 @@ function mapSupabaseOffre(row: any, villageSlug = "", villageNom = ""): ApiOffre
     duree: row.duree ?? "",
     prix: Number(row.prix) || 0,
     placesDisponibles: Number(row.places_disponibles) || 0,
-    difficulte: (row.difficulte as ApiOffre["difficulte"]) ?? "Modéré",
+    difficulte: (row.difficulte as Offre["difficulte"]) ?? "Modéré",
     inclus: Array.isArray(row.inclus) ? row.inclus : [],
     nonInclus: Array.isArray(row.non_inclus) ? row.non_inclus : [],
     image: row.image ?? "",
@@ -40,31 +40,30 @@ function requireSupabase() {
   return supabase;
 }
 
-export async function getVillages(): Promise<ApiVillage[]> {
+export async function getVillages(): Promise<Village[]> {
   const sb = requireSupabase();
   const { data, error } = await sb.from("villages").select("*").order("nom", { ascending: true });
   if (error) throw error;
   return (data ?? []).map(mapSupabaseVillage);
 }
 
-export async function getVillage(slug: string): Promise<{ village: ApiVillage; offres: ApiOffre[] } | null> {
+export async function getVillage(slug: string): Promise<{ village: Village; offres: Offre[] } | null> {
   const sb = requireSupabase();
   const { data, error } = await sb.from("villages").select("*, offres(*)").eq("slug", slug).single();
   if (error || !data) return null;
-
   const village = mapSupabaseVillage(data);
   const offres = (data.offres ?? []).map((o: any) => mapSupabaseOffre(o, village.slug, village.nom));
   return { village, offres };
 }
 
-export async function getOffres(): Promise<ApiOffre[]> {
+export async function getOffres(): Promise<Offre[]> {
   const sb = requireSupabase();
   const { data, error } = await sb.from("offres").select("*, village:villages(*)").order("titre", { ascending: true });
   if (error) throw error;
   return (data ?? []).map((o: any) => mapSupabaseOffre(o));
 }
 
-export async function getOffre(slug: string): Promise<ApiOffre | null> {
+export async function getOffre(slug: string): Promise<Offre | null> {
   const sb = requireSupabase();
   const { data, error } = await sb.from("offres").select("*, village:villages(*)").eq("slug", slug).single();
   if (error || !data) return null;

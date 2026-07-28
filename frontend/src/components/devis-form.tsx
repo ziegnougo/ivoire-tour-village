@@ -2,8 +2,8 @@
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
-import { createDevisRequestUnified } from "@/lib/data";
-import type { Offre } from "@/lib/api";
+import { createDevisRequest } from "@/lib/data";
+import type { Offre } from "@/lib/supabase/types";
 
 export function DevisForm({ offre }: { offre: Offre }) {
   const [submitted, setSubmitted] = useState(false);
@@ -21,7 +21,7 @@ export function DevisForm({ offre }: { offre: Offre }) {
     const message = String(formData.get("message") ?? "");
 
     try {
-      await createDevisRequestUnified({
+      await createDevisRequest({
         offre_slug: offre.slug,
         nom: String(formData.get("nom")),
         email: String(formData.get("email")),

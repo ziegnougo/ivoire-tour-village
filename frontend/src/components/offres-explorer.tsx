@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { OffreCard } from "@/components/offre-card";
-import type { Offre, Village } from "@/lib/api";
+import type { Offre, Village } from "@/lib/supabase/types";
 
 const DIFFICULTES = ["Toutes", "Facile", "Modéré", "Difficile"] as const;
 const PRIX_MAX_DEFAUT = 100000;
