@@ -12,7 +12,10 @@ export async function generateMetadata({
   const { slug } = await params;
   const offre = await getOffre(slug);
   if (!offre) return {};
-  return { title: `Demander un devis — ${offre.titre} | Ivoire-Tour Village` };
+  return {
+    title: `Demander un devis — ${offre.titre} | Ivoire-Tour Village`,
+    description: `Demandez un devis personnalisé pour l'offre ${offre.titre}.`,
+  };
 }
 
 export default async function DevisPage({

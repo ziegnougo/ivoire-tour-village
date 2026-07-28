@@ -1,28 +1,15 @@
 import type { Metadata } from "next";
 import { getOffres, getVillages } from "@/lib/data";
-import { OffresExplorer } from "@/components/offres-explorer";
+import { RealtimeOffres } from "@/components/realtime-offres";
 
 export const metadata: Metadata = {
-  title: "Offres & expériences | Ivoire-Tour Village",
+  title: "Offres touristiques | Ivoire-Tour Village",
   description:
-    "Réservez des expériences de camping et d'immersion dans les villages touristiques de Côte d'Ivoire.",
+    "Réservez des expériences de camping, des ateliers et des immersions culturelles dans les villages de Côte d'Ivoire.",
 };
 
 export default async function OffresPage() {
   const [offres, villages] = await Promise.all([getOffres(), getVillages()]);
 
-  return (
-    <div className="mx-auto max-w-6xl px-4 py-16">
-      <h1 className="text-3xl font-bold sm:text-4xl">
-        Offres & expériences
-      </h1>
-      <p className="mt-3 max-w-2xl text-muted-foreground">
-        Des excursions, randonnées et séjours de camping à réserver en ligne
-        dans les villages partenaires.
-      </p>
-      <div className="mt-8">
-        <OffresExplorer offres={offres} villages={villages} />
-      </div>
-    </div>
-  );
+  return <RealtimeOffres initialOffres={offres} initialVillages={villages} />;
 }

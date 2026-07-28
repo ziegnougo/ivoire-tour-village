@@ -12,7 +12,10 @@ export async function generateMetadata({
   const { slug } = await params;
   const offre = await getOffre(slug);
   if (!offre) return {};
-  return { title: `Réserver — ${offre.titre} | Ivoire-Tour Village` };
+  return {
+    title: `Réserver — ${offre.titre} | Ivoire-Tour Village`,
+    description: `Réservez votre expérience ${offre.titre} au meilleur prix.`,
+  };
 }
 
 export default async function ReserverPage({
