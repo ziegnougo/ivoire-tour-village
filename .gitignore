@@ -4,6 +4,3 @@
 .env.*.local
 frontend/.env.local
 frontend/.env.production.example
-backend/.env
-backend/.env.local
-backend/.env.production.example
